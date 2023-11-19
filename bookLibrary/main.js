@@ -1,38 +1,16 @@
-//variables from Dom
-const modal = document.getElementById("modal");
-const form = document.querySelector(".form");
-const addBookBtn = document.querySelector(".add-btn");
-const submitBtn = document.querySelector(".form-btn");
-const checkBoxes = document.querySelectorAll("input[name='book']");
-const library = document.querySelector(".cards-grid");
 
-//All of your book objects are stored in myLibrary array
-/*
-let myLibrary = [{
-  "title": "Title 1",
-  "author": "Author 1",
-  "pages": "111",
-  "status1": "Read",
-  "id": 1
-},{
-  "title": "Title 2",
-  "author": "Author 2",
-  "pages": "22",
-  "status1": "Read",
-  "id": 2
-}];
-*/
-myLibrary = [new Book('Title2', 'Author 2', '22', 'Read')];
-
-//id counter set point
-
-//book class
-
+// I am not a very big fan of this, but since we are using just one button, then this will do.
 form.addEventListener("submit", (e) => {
   e.preventDefault();
-  createBook();
+  // remember, this value comes as string! Consider parsing to Int or use "==" instead.
+  let bookId = document.querySelector("#id").value; 
+  if(bookId){
+    updateBook(bookId);
+  }
+  else{
+    createBook();
+  }
 });
-
 
 function displayBooks(){
   let h = '';
@@ -42,39 +20,61 @@ function displayBooks(){
   library.innerHTML = h;
 }
 
-
-// //takes user’s input and store the new book objects into an array.
-// const addBookToLibrary = (item) => myLibrary.push(item);
-
-// //take all data from form
 const createBook = () => {
-  let title = 'Title x';// document.querySelector("#title").value;
-  let author = 'Author x';// document.querySelector("#author").value;
-  let pages = '123';// document.querySelector("#number").value;
-  let status1 = 'Read';
+  let title = document.querySelector("#title").value;// document.querySelector("#title").value;
+  let author = document.querySelector("#author").value;// document.querySelector("#author").value;
+  let pages = document.querySelector("#pages").value;// document.querySelector("#number").value;
+  let status = getCheckBoxValues('status');
 
-  let newBook = new Book(title, author, pages, status1);
-  //console.log(newBook);
+  let newBook = new Book(title, author, pages, status);
+
   myLibrary.push(newBook);
-
+  closeModal();
+  formReset();
   displayBooks();
 };
 
-function editBook(bookId){
-  let book = myLibrary.find(x => x.id === bookId);
-  document.querySelector("#title").value = book.title;
-  document.querySelector("#author").value = book.author;
-  document.querySelector("#pages").value = book.pages;
-  modal.style.visibility = "visible";
+function updateBook(bookId){
+  let book = myLibrary.find(x => x.id == bookId); // must use == instead of === because we save as number, but search as string.
+  if(book){
+    book.title = document.querySelector("#title").value;
+    book.author = document.querySelector("#author").value;
+    book.pages = document.querySelector("#pages").value;
+    book.status = getCheckBoxValues('status');getCheckBoxValues
+  }
+  closeModal();
+  formReset();
+  displayBooks();
 }
 
+const removeBook = (bookId) => {
+  const indexOfObject = myLibrary.findIndex(book => {
+    return book.id == bookId;
+  });
+  myLibrary.splice(indexOfObject, 1);
+  console.log(myLibrary);
+  formReset();
+  displayBooks();
+};
 
-function closeModal(){
-  document.querySelector("#title").value = '';
-  document.querySelector("#author").value = '';
-  document.querySelector("#pages").value = '';
-  modal.style.visibility = "hidden";
-}
+const toggleStatus = (bookId) => {
+  let book = myLibrary.find((book) => book.id == bookId);
+
+  // I always like to check if object is truely found, before I do something with it.
+  if(book){
+    book.status = (book.status == 'read')? 'unread' : 'read';
+  }
+  displayBooks();
+} 
+
+
+
+
+
+
+
+
+
 // //remove book from the library with delete button
 // const removeBook = (cardId) => {
 //   let bookId = myLibrary.findIndex((book) => book.id === cardId);
@@ -96,9 +96,9 @@ function closeModal(){
 // //change book status from unread to read
 // const editBookStatus = (cardId) => {
 //   const editStatusIndex = myLibrary.findIndex((book) => book.id === cardId);
-//   //console.log(myLibrary[editStatusIndex].status1);
-//   if (myLibrary[editStatusIndex].status1 === "Unread") {
-//     myLibrary[editStatusIndex].status1 = "Read";
+//   //console.log(myLibrary[editStatusIndex].status);
+//   if (myLibrary[editStatusIndex].status === "Unread") {
+//     myLibrary[editStatusIndex].status = "Read";
 //     displayBook();
 //   }
 // };

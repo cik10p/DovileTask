@@ -1,9 +1,9 @@
 class Book {
-    constructor(title, author, pages, status1) {
+    constructor(title, author, pages, status) {
       (this.title = title),
         (this.author = author),
         (this.pages = pages),
-        (this.status1 = status1);
+        (this.status = status);
       this.id = generateId();
     }
   
@@ -13,9 +13,9 @@ class Book {
       <h5 class='text'>"${this.title}"</h5>
       <p class='text'>By: ${this.author}</p>
       <p class='text'>Pages: ${this.pages}</p>
-      <button class='change'>${this.status1}</button>
-      <button onClick="editBook(${this.id})">Change</button>
-      <button class='remove'>Delete</button>
+      <button class='change' onClick="toggleStatus(${this.id})">${this.status}</button>
+      <button class='change' onClick="openEditDialog(${this.id})">Edit</button>
+      <button class='remove' onClick="removeBook(${this.id})">Delete</button>
       </div>`;
       return card;
     }

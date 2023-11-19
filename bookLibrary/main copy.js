@@ -88,11 +88,7 @@ const createDisplayBook = () => {
   displayBook();
 };
 //“NEW BOOK” button that brings up a form allowing users to input the details for the new book
-const formVisible = () => {
-  form.reset();
-  modal.style.visibility = "visible";
-};
-addBookBtn.addEventListener("click", formVisible);
+
 
 const formHidden = (e) => {
   if (e.target === modal) {

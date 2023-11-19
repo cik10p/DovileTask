@@ -9,3 +9,9 @@ function generateId() {
     idCounter = idCounter + 1;
     return idCounter;
   };
+
+  function formReset(){
+    document.querySelector("#id").value = ''; // form.reset() does not clean hidden fields.
+    form.reset();
+  }
+  
